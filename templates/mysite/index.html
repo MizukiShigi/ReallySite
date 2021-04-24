@@ -1,0 +1,59 @@
+{% extends 'mysite/base.html' %}
+
+{% block content %}
+<div class="container">
+    
+    <div class="p-4 p-md-5 mb-4 rounded bg-warning">
+        <div class="col-md-6 px-0">
+            <h1 class="display-4 font-italic">Django講座</h1>
+            <p class="lead my-3">文章をかこう</p>
+            <p class="lead mb-0">
+                <a href="#" class="font-weight-bold">続きを読む</a>
+            </p>
+        </div>
+    </div>
+    <div class="row mb-2">
+        {% for rank in ranks %}
+        <div class="col-md-6">
+            <div class="row g-0 border rounded overflow-hidden flex-md-row 
+            mb-4 shadow-sm h-md-250 position-relative">
+                <div class="col p-4 d-flex flex-column position-static">
+                    <strong class="d-inline-block mb-2 text-primary">Django</strong>
+                    <h3 class="mb-0">{{ rank.title }}</h3>
+                    <div class="mb-1 text-muted">{{ rank.created_at }}</div>
+                    <p class="card-text mb-auto">{{ rank.text }}</p>
+                    <a href="{% url 'article' rank.id %}" class="stretched-link">続きを読む</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+</div>
+
+<main class="container">
+    <div class="row">
+        <div class="col-md-8">
+            <h3 class="pb-4 font-italic border-bottom">
+                Django Lesson
+            </h3>
+            {% for item in articles %}
+            <div class="blog-post">
+            <a href="{% url 'article' item.pk %}">
+                <h2 class="blog-post-title">{{item.title}}</h2>
+                <p class="blog-post-meta">{{item.created_at}}
+                    <a href="#">{{item.author}}</a>
+                </p>
+            </a>
+            </div>
+            {% endfor %}
+            <nav class="blog-pagination">
+                <a class="btn btn-outline-primary" href="{% url 'articles' %}">ブログ一覧</a>
+            </nav>
+        </div>
+        {% include 'mysite/snipets/sidebar.html' %}
+    </div>
+</main>
+
+
+{% endblock %}

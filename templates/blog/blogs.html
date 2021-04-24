@@ -1,0 +1,31 @@
+{% extends 'mysite/base.html' %}
+
+{% block content %}
+<div class="container">
+
+<main class="container">
+    <div class="row">
+        <div class="col-md-8">
+            <h3 class="pb-4 font-italic border-bottom">
+                Django Lesson
+            </h3>
+
+            {% for item in page_obj %}
+            <div class="blog-post">
+            <a href="{% url 'article' item.pk %}">
+                <h2 class="blog-post-title">{{item.title}}</h2>
+                <p class="blog-post-meta">{{item.created_at}}
+                    <a href="#">{{item.author}}</a>
+                </p>
+            </a>
+            </div>
+            {% endfor %}
+            
+            {% include 'mysite/snipets/pagenation.html' %}
+        </div>
+        {% include 'mysite/snipets/sidebar.html' %}
+    </div>
+</main>
+
+
+{% endblock %}
