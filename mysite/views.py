@@ -10,18 +10,19 @@ from django.core.mail import send_mail
 # Create your views here.
 
 def index(request):
-    ranks = Article.objects.raw("""
-        select *
-        from blog_article
-        where id in 
-        (select blog_article.id
-        from blog_article
-        inner join blog_like
-        on blog_article.id = blog_like.article_id
-        group by blog_article.id
-        order by count(blog_article.id)
-        limit 2)
-    """)
+    # ranks = Article.objects.raw("""
+    #     select *
+    #     from blog_article
+    #     where id in 
+    #     (select blog_article.id
+    #     from blog_article
+    #     inner join blog_like
+    #     on blog_article.id = blog_like.article_id
+    #     group by blog_article.id
+    #     order by count(blog_article.id)
+    #     limit 2)
+    # """)
+    ranks = Article.objects.all()[:2]
     objs = Article.objects.all()[:3]
     context = {'articles':objs, 'ranks':ranks}
     return render(request, 'mysite/index.html', context)
