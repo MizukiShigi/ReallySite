@@ -5,6 +5,7 @@ from mysite.forms import UserCreationForm, ProfileForm
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login
+from django.core.mail import send_mail
 
 # Create your views here.
 
@@ -63,3 +64,14 @@ def mypage(request):
             profile.save()
             messages.success(request, '更新完了')
     return render(request, 'mysite/mypage.html', context)
+
+def contact(request):
+    context = {}
+    if request.method == 'POST':
+        subject = 'お問い合わせがありました'
+        message = request.POST.get('content')
+        email_from = 'shigi19971204@gmail.com'
+        email_to = ['shigi19971204@gmail.com']
+        send_mail(subject, message, email_from, email_to)
+        messages.success(request,'お問い合わせありがとうございます。')
+    return render(request, 'mysite/contact.html', context)
