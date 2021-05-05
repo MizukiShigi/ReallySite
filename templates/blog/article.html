@@ -15,7 +15,11 @@
                 <p>{{article.text}}</p>
             </div>
 
-            {% include 'mysite/snipets/like_count.html' %}
+            <nav class="nav d-flex justify-content-between">
+                {% include 'mysite/snipets/like_count.html' %}
+                {% include 'mysite/snipets/delete.html' %}
+            </nav>
+            
 
             <hr class="my-4">
             {% include 'mysite/snipets/comment.html'%}

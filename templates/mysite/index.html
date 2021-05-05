@@ -3,12 +3,12 @@
 {% block content %}
 <div class="container">
     
-    <div class="p-4 p-md-5 mb-4 rounded bg-warning">
+    <div class="p-4 p-md-5 mb-4 border rounded bg-light">
         <div class="col-md-6 px-0">
-            <h1 class="display-4 font-italic">ブログの使用方法</h1>
-            <p class="lead my-3">有益な情報を共有しましょう...</p>
+            <h1 class="display-4 font-italic">Take a peek?</h1>
+            <p class="lead my-3">有益な情報を共有しましょう</p>
             <p class="lead mb-0">
-                <a href="{% url 'articles' %}" class="font-weight-bold">続きを読む</a>
+                <a href="{% url 'articles' %}" class="font-weight-bold">記事を見に行く</a>
             </p>
         </div>
     </div>
@@ -22,7 +22,7 @@
                     <h3 class="mb-0">{{ rank.title }}</h3>
                     <div class="mb-1 text-muted">{{ rank.created_at }}</div>
                     <p class="card-text mb-auto">{{ rank.text }}</p>
-                    <a href="{% url 'article' rank.id %}" class="stretched-link">続きを読む</a>
+                    <a href="{% url 'article' rank.id %}" class="stretched-link"></a>
                 </div>
             </div>
         </div>
@@ -34,9 +34,12 @@
 <main class="container">
     <div class="row">
         <div class="col-md-8">
-            <h3 class="pb-4 font-italic border-bottom">
-                最新の記事
-            </h3>
+            <div class="border-bottom">
+                <nav class="nav d-flex justify-content-between">
+                    <h3>最新の記事</h3>
+                    {% include 'mysite/snipets/post.html' %}
+                </nav>
+            </div>
             {% for item in articles %}
             <div class="blog-post">
             <a href="{% url 'article' item.pk %}">
@@ -48,7 +51,7 @@
             </div>
             {% endfor %}
             <nav class="blog-pagination">
-                <a class="btn btn-outline-primary" href="{% url 'articles' %}">ブログ一覧</a>
+                <a class="btn btn-outline-primary" href="{% url 'articles' %}">記事一覧</a>
             </nav>
         </div>
         {% include 'mysite/snipets/sidebar.html' %}

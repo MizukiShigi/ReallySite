@@ -1,6 +1,5 @@
 
 <div>
-    
     <h3 class="h6">コメント</h3>
     <div class="list_group">
         {% for comment in comments %}
@@ -17,9 +16,7 @@
         {% csrf_token %}
         <div class="mb-2">
             <label>コメント投稿</label>
-            <textarea class="rounded-0 bg-light form-control" rows="3" name="comment">
-
-            </textarea>
+            <textarea class="rounded-0 bg-light form-control" rows="3" name="comment"></textarea>
         </div>
         <div class="text-right">
             <button class="btn btn-sm btn-outline-success" type="submit">コメントする</button>

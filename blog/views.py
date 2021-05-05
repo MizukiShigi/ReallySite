@@ -1,14 +1,22 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404, redirect
 from blog.models import Article, Comment, Like
 from django.core.paginator import Paginator
-from blog.forms import CommentForm
+from blog.forms import CommentForm, ArticleForm
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.http import JsonResponse
+from django.contrib import messages
 # Create your views here.
 
 def index(request):
+    if request.method == 'POST':
+        form = ArticleForm(request.POST)
+        print(request.POST)
+        if form.is_valid():
+            article = form.save(commit=False)
+            article.author = request.user
+            article.save()
     objs = Article.objects.all()
-    paginator = Paginator(objs, 2)
+    paginator = Paginator(objs, 5)
     page_number = request.GET.get('page')
     context = {
         'page_obj':paginator.get_page(page_number),
@@ -17,15 +25,20 @@ def index(request):
     return render(request, 'blog/blogs.html', context)
 
 def article(request, pk):
-    obj = Article.objects.get(pk=pk)
+    obj = get_object_or_404(Article, pk=pk)
     print(obj)
     if request.method == 'POST':
-        form = CommentForm(request.POST)
-        if form.is_valid():
-            comment = form.save(commit=False)        
-            comment.user = request.user
-            comment.article = obj
-            comment.save() 
+        if 'comment' in request.POST:
+            form = CommentForm(request.POST)
+            if form.is_valid():
+                comment = form.save(commit=False)        
+                comment.user = request.user
+                comment.article = obj
+                comment.save() 
+        else:
+            obj.delete()
+            messages.success(request, '削除が完了しました')
+            return redirect('articles')
     comments = Comment.objects.filter(article=pk)
     like_count = Like.objects.filter(article=pk).count()
     context = {'article':obj, 'comments':comments, 'like_count':like_count}
