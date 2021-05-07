@@ -6,10 +6,20 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login
 from django.core.mail import send_mail
+from blog.forms import ArticleForm
+from common import common
 
 # Create your views here.
 
 def index(request):
+    if request.method == 'POST':
+        form = ArticleForm(request.POST)
+        print(request.POST)
+        if form.is_valid():
+            article = form.save(commit=False)
+            article.user = request.user
+            article.save()
+            common.send_line_notify(f'{request.user}さんが新しい記事を投稿しました。\n「{article.title}」\n{request.build_absolute_uri()}')
     ranks = Article.objects.raw("""
         select *
         from blog_article
@@ -22,7 +32,7 @@ def index(request):
         order by count(blog_article.id) desc
         limit 2)
     """)
-    objs = Article.objects.all()[:3]
+    objs = Article.objects.order_by('-updated_at')[:3]
     context = {'articles':objs, 'ranks':ranks}
     return render(request, 'mysite/index.html', context)
 
@@ -76,3 +86,4 @@ def contact(request):
         send_mail(subject, message, email_from, email_to)
         messages.success(request,'お問い合わせありがとうございます。')
     return render(request, 'mysite/contact.html', context)
+

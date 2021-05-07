@@ -5,6 +5,7 @@ from blog.forms import CommentForm, ArticleForm
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.http import JsonResponse
 from django.contrib import messages
+from common import common
 # Create your views here.
 
 def index(request):
@@ -13,9 +14,10 @@ def index(request):
         print(request.POST)
         if form.is_valid():
             article = form.save(commit=False)
-            article.author = request.user
+            article.user = request.user
             article.save()
-    objs = Article.objects.all()
+            common.send_line_notify(f'{request.user}さんが新しい記事を投稿しました。\n「{article.title}」\n{request.build_absolute_uri()}')
+    objs = Article.objects.order_by('-updated_at')
     paginator = Paginator(objs, 5)
     page_number = request.GET.get('page')
     context = {
@@ -34,14 +36,23 @@ def article(request, pk):
                 comment = form.save(commit=False)        
                 comment.user = request.user
                 comment.article = obj
-                comment.save() 
-        else:
+                comment.save()
+        elif 'edit' in request.POST:
+            form = ArticleForm(request.POST)
+            if form.is_valid():
+                edit_article = form.save(commit=False)        
+                obj.title = edit_article.title
+                obj.text = edit_article.text
+                obj.save()
+                messages.success(request, '編集が完了しました')
+        elif 'delete' in request.POST:
             obj.delete()
             messages.success(request, '削除が完了しました')
             return redirect('articles')
     comments = Comment.objects.filter(article=pk)
     like_count = Like.objects.filter(article=pk).count()
     context = {'article':obj, 'comments':comments, 'like_count':like_count}
+    print(obj.author,request.user)
     return render(request, 'blog/article.html', context)
 
 @ensure_csrf_cookie

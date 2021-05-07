@@ -5,23 +5,32 @@
 <main class="container">
     <div class="row">
         <div class="col-md-8">
-            <h3 class="pb-4 font-italic border-bottom">
-                {{article.title}}
-            </h3>
-            <div class="blog-post">
-                <p class="blog-post-meta">{{article.created_at}}
-                    <a>{{article.author}}</a>
+            <div class="nav d-flex justify-content-between border-bottom">
+                <h3 class="font-italic pb-2">
+                    {{article.title}}
+                </h3>
+                <p class="blog-post-meta my-3">{{article.created_at}}
+                    <a>　{{article.user}}</a>
                 </p>
+            </div>
+            
+            <div class="blog-post">
                 <p>{{article.text}}</p>
             </div>
 
             <nav class="nav d-flex justify-content-between">
                 {% include 'mysite/snipets/like_count.html' %}
-                {% include 'mysite/snipets/delete.html' %}
+                {% if article.user == request.user %}
+                <nav class="nav d-flex justify-content-between">
+                    {% include 'mysite/snipets/edit.html' %}
+                    {% include 'mysite/snipets/delete.html' %}
+                </nav>
+                {% endif %}
+
             </nav>
             
 
-            <hr class="my-4">
+            <hr class="mt-3 mb-4">
             {% include 'mysite/snipets/comment.html'%}
             
         </div>

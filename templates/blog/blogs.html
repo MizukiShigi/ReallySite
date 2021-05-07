@@ -17,11 +17,11 @@
             
 
             {% for item in page_obj %}
-            <div class="blog-post">
-            <a href="{% url 'article' item.pk %}">
-                <h2 class="blog-post-title">{{item.title}}</h2>
+            <div class="blog-post border my-4 rounded">
+            <a class="text-decoration-none" href="{% url 'article' item.pk %}">
+                <h2 class="blog-post-title bg-light border py-1">{{item.title}}</h2>
                 <p class="blog-post-meta">{{item.created_at}}
-                    <a href="#">{{item.author}}</a>
+                    {{item.user}}
                 </p>
             </a>
             </div>
